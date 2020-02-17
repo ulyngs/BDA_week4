@@ -1,7 +1,7 @@
 ---
 title: "Big Data Analytics Week 4"
-author: "Bertie Vidgen"
-date: "02/02/2019"
+author: "Ulrik Lyngs (based on Bertie Vidgen's materials)"
+date: "2020-02-17"
 output: html_document
 ---
 
@@ -21,14 +21,14 @@ fun_check_packages <- function(x){
     install.packages(x[i])}
     library(x[i],character.only=TRUE)}
 }
-packs = c('ggplot2','gridExtra', 'dplyr','tidyr', 'knitr', 'devtools', 'zoo', 'cowplot', 'forecast')
+packs = c('ggplot2','gridExtra', 'dplyr','tidyr', 'knitr', 'devtools', 'zoo', 'cowplot', 'forecast', 'patchwork')
 fun_check_packages(packs); rm(packs, fun_check_packages)
 
 #devtools::install_github("bvidgen/rBDA", force = F)
 library("rBDA")
 
 # load the data:
-load('~/Dropbox/BDA-2019/bda_week4.RData')
+load('bda_week4.RData')
 ```
 
 
@@ -141,7 +141,7 @@ The only downside to our function is that, because it doesn't call C, it is not 
 
 ```{r cross_cor_9}
 # Use the new functions
-ccf.out = rBDA::cor_fun(x = mydata5$a, # we are lagging b against a
+ccf.out <- rBDA::cor_fun(x = mydata5$a, # we are lagging b against a
                         y = mydata5$b, 
                         lag.max = 200,
                         wrap = F,
@@ -195,8 +195,7 @@ cor_plot()
 cor_scatter()
   plots multiple scatter plots with different lags 
 
-We are still working on the code, so please be aware that there may be some small hiccups if you use inputs/data that we haven't tested for. If you encounter any problems - or any ways you think the code/documentation can be improved - then please email bertievidgen@gmail.com with your issue (this would be really helpful for us!). And if you do get really stuck then just use the Base R function.
-
+We are still working on the code, so please be aware that there may be some small hiccups if you use inputs/data that we haven't tested for. If you encounter any problems - or any ways you think the code/documentation can be improved - then please email ulrik.lyngs@cs.ox.ac.uk with your issue (this would be really helpful for us!). And if you do get really stuck then just use the Base R function.
 
 
 ## Autocorrelation
@@ -212,7 +211,7 @@ Here are some useful resources with more info on autocorrelation:
   https://en.wikipedia.org/wiki/Autocorrelation
   https://www.youtube.com/watch?v=QB89v1EHuP0 
   http://nthturn.com/2015/04/04/autocorrelation-a-brief-overview-using-r/
-* Please note that if you Google'autocorrelation' you will come across alot of material on autocorrelated errors. Whilst this uses the same calculation it is very different - autocorrelated errors is a way analysing the residual errors in a regression model.
+* Please note that if you Google 'autocorrelation' you will come across alot of material on autocorrelated errors. Whilst this uses the same calculation it is very different - autocorrelated errors is a way analysing the residual errors in a regression model.
 
 ### Some key assumptions of autocorrelation:
 1. the x and y variables must be either ratio or interval (i.e. they are not categorical variables and actually can be correlated).
@@ -248,7 +247,7 @@ The function that we introduced in the cross-correlation section (cor_fun() in t
 First, calculate the auto-correlation values using cor_fun() 
 
 ```{r autocorr_3}
-acf.out = rBDA::cor_fun(mydata6$y,
+acf.out <- rBDA::cor_fun(mydata6$y,
                         lag.max = 1000) # note that you only need to pass ONE variable to cor_fun for autocorrelation rather than two (which is what we did when we used cor_fun to calculate cross-correlation) - cor_fun() knows when you pass just one variable to calculate the autocorrelation
 ```
 
@@ -296,18 +295,18 @@ rBDA::cor_plot(acf.out.2)
 From the ACF plot we can see that the data contains a periodically repeating function - every 6 or 7 values there is a fairly regular pattern, even though overall the data looks quite messy and has no obvious pattern. We can plot each of these intervals separately to see them in more detail:
 
 ```{r autocorr_10}
-NumIntervals = 10 # how many separate intervals we want to plot (anything more than 10 starts to look really messy)
+NumIntervals <- 10 # how many separate intervals we want to plot (anything more than 10 starts to look really messy)
 
-Interval = 7 # estimated number of time units each interval of the variable lasts for (7 is common for if the variable 'time' measures days as there are 7 days in a week - or 24 if 'time' measures hours etc.). With our data the units are days, so 7 makes sense (and is backed up by our ACF plot)
-Len = Interval*NumIntervals # Len is the total amount of values that we will plot - we want this to be something manageable and which looks nice on the plot
+Interval <- 7 # estimated number of time units each interval of the variable lasts for (7 is common for if the variable 'time' measures days as there are 7 days in a week - or 24 if 'time' measures hours etc.). With our data the units are days, so 7 makes sense (and is backed up by our ACF plot)
+Len <- Interval*NumIntervals # Len is the total amount of values that we will plot - we want this to be something manageable and which looks nice on the plot
 
 # create a new df which is smaller than the df 'df.acf' - we can't plot every week on there as it will look too crowded (check it yourself to see)
-mydata.short = mydata7[1:Len,] # For now, we are taking the first 70 values
+mydata.short <- mydata7[1:Len,] # For now, we are taking the first 70 values
 
 # Create two new variables.
   # The first variable is the interval that each of the time values is assigned to (i.e. beacuse we have an interval of 7 then the first 7 values are in the first time interval, the 8th to 14th values are in the second interval and so on)
   # The second variable is time.1 which is a variable for the plotting
-mydata.short = mydata.short %>%
+mydata.short <- mydata.short %>%
   dplyr::mutate(interval = rep(1: NumIntervals, each = Interval)) %>%
   dplyr::mutate(interval = as.factor(interval)) %>%
   dplyr::mutate(time.1 = rep(1:Interval, times = NumIntervals))
