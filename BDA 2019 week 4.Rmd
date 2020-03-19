@@ -440,24 +440,30 @@ Very very finally... You may encounter variables which you want to convert into 
 
 > "the number of seconds that have elapsed since ... the time 00:00:00 UTC on 1 January 1970, minus leap seconds". 
 
-Here are some commands for converting dates into Unix values. 
+If you need to work with time and dates, read the chapter on this in R for Data Science (https://r4ds.had.co.nz/dates-and-times.html) and use the 'lubridate' package!
 
-However, if you need to work with time and dates, you should read through the relevant chapter in R for Data Science (https://r4ds.had.co.nz/dates-and-times.html) and use the 'lubridate' package, to make your life easy!
+Here's from the lubridate package documentation, which I whole-heartedly agree with:
+
+> Date-time data can be frustrating to work with in R. R commands for date-times are generally unintuitive and change depending on the type of date-time object being used. Moreover, the methods we use with date-times must be robust to time zones, leap days, daylight savings times, and other time related quirks, and R lacks these capabilities in some situations.  
+> Lubridate makes it easier to do the things R does with date-times and possible to do the things R does not.
+> - https://lubridate.tidyverse.org
 
 ```{r extra}
+library(lubridate)
+
 # Convert a value into a POSIX variable:
-a <- as.POSIXct("2013-09-16 2:13:46 EST")
+a_time <- ymd_hms("2013-09-16 2:13:46",tz = "UTC")
 class(a) #"POSIXct"
 
 # Convert POSIX variable into a Unix value:
-a <- as.numeric(a) #Unix #1379290426
+a_numeric <- as.numeric(a_time) #Unix #1379290426
 class(a) #numeric
 
-as.numeric(as.POSIXct("2013-09-16 2:13:46 EST"))
-as.numeric(as.POSIXct("2013-09-16", format="%Y-%m-%d"))
+a_time
+a_numeric
 
 # Convert Unix back to a date/time variable:
-as.POSIXct(as.numeric(as.character(a)), origin="1970-01-01")
+as_datetime(a_numeric)
 
 ```
 
