@@ -6,7 +6,10 @@ output: html_document
 ---
 
 # BDA Week 4 notes
-In this lecture we look at autocorrelation and cross-correlation. Autocorrelation is useful for investigating univariate data (data with a single variable). Cross-correlation is useful for investigating bivariate data (data with two variables). We also look at how to analyse and plot bivariate data with a moving time window and lots of other good stuff involving time.
+In this lecture we look at autocorrelation and cross-correlation. 
+Cross-correlation is useful for investigating bivariate data (data with two variables). 
+Autocorrelation is useful for investigating univariate data (data with a single variable).
+We also look at how to analyse and plot bivariate data with a moving time window and time formats in R.
 
 Set up the R workspace and load the required packages/data.
 
@@ -437,7 +440,6 @@ ggplot(mydata7_w_smoothed) +
 
 
 ## Some extra stuff
-
 ### Time series data in R
 Most of the data that we have used in this class has been a dataframe consisting of a Date variable ('time') and then a variable that contains a sequence of values ('x' or 'y'). 
 
@@ -448,7 +450,8 @@ class(mydata7$time) #Date
 class(mydata7$y) #numeric
 ```
 
-Storing times and dates as date variables is useful as R recognises that they are dates and should be formatted as such. Another way of analysing time series data is to use the ts() command:
+Storing times and dates as date variables is useful as R recognises that they are dates and should be formatted as such. 
+Another way of analysing time series data is to use the ts() command:
 
 ```{r dates_2}
 x <- rnorm(1000)
