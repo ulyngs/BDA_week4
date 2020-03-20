@@ -21,8 +21,8 @@ fun_check_packages <- function(x){
     install.packages(x[i])}
     library(x[i],character.only=TRUE)}
 }
-packs = c('ggplot2','gridExtra', 'dplyr','tidyr', 'knitr', 'devtools', 'zoo', 'cowplot', 'forecast', 'patchwork')
-fun_check_packages(packs); rm(packs, fun_check_packages)
+packs = c('tidyverse', 'devtools', 'forecast', 'gridExtra')
+fun_check_packages(packs)
 
 #devtools::install_github("bvidgen/rBDA", force = F)
 library("rBDA")
@@ -453,11 +453,11 @@ library(lubridate)
 
 # Convert a value into a POSIX variable:
 a_time <- ymd_hms("2013-09-16 2:13:46",tz = "UTC")
-class(a) #"POSIXct"
+class(a_time) #"POSIXct"
 
 # Convert POSIX variable into a Unix value:
 a_numeric <- as.numeric(a_time) #Unix #1379290426
-class(a) #numeric
+class(a_numeric) #numeric
 
 a_time
 a_numeric
