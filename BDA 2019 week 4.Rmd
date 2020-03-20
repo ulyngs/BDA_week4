@@ -6,7 +6,7 @@ output: html_document
 ---
 
 # BDA Week 4 notes
-In this lecture we look at autocorrelation and cross-correlation. 
+In this document we look at cross-correlation and autocorrelation. 
 Cross-correlation is useful for investigating bivariate data (data with two variables). 
 Autocorrelation is useful for investigating univariate data (data with a single variable).
 We also look at how to analyse and plot bivariate data with a moving time window and time formats in R.
@@ -491,7 +491,7 @@ Here's from the lubridate package documentation, which I whole-heartedly agree w
 library(lubridate)
 
 # Convert a value into a POSIX variable:
-a_time <- ymd_hms("2013-09-16 2:13:46",tz = "UTC")
+a_time <- ymd_hms("2013-09-16 2:13:46", tz = "UTC")
 class(a_time) #"POSIXct"
 
 # Convert POSIX variable into a Unix value:
