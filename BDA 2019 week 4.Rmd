@@ -11,7 +11,6 @@ In this lecture we look at autocorrelation and cross-correlation. Autocorrelatio
 Set up the R workspace and load the required packages/data.
 
 ```{r setup, echo=F, message = F, warning = F}
-#rm(list=ls()) #clear the workspace
 options(scipen = 10) #makes the output more readable by increasing the number of values before scientific notation is used
 
 #if the packages are not installed, then install them. Also, load all required packages:
@@ -183,11 +182,50 @@ ccf_out$fit_best # use the fit_best value as a guide for what to plot
 rBDA::cor_scatter(mydata5$a,# we keep a where it is
                   mydata5$b, # we move b forward by the stipulated number of lags
                   lags = list(99, 100, 101), # we can see that 100 is the optimum value
-                  period = 'days', # this isjust for the title you can adjust these optional params to personalize the graphs
+                  period = 'days', # this is just for the title you can adjust these optional params to personalize the graphs
                   x.lab = 'a',
                   y.lab = 'b')
 ```
 
+### Transparent manual example
+Here is a manual example - we note also that there seems to be a mistake in the rBDA package's implementation of lagging: 
+As you may have noticed, base R's cross-correlation plot suggested that b was **behind** a by 100 days, whereas the rBDA package suggested b is **ahead** of a by 100 days.
+
+In the manual example below, you can see that base R is correct:
+
+```{r}
+library(lubridate)
+
+# create data frames with shifted dates (because the 'time' column is a date, adding 1 will add one day)
+mydata5_shifted_back_100 <- mydata5 %>% 
+  mutate(time = time - 100) %>% 
+  select(b_shifted_back = b, time)
+
+mydata5_shifted_forward_100 <- mydata5 %>% 
+  mutate(time = time + 100) %>% 
+  select(b_shifted_forward = b, time)
+
+# add the shifted values to the original dataframe
+mydata_combined <- mydata5 %>% 
+  left_join(mydata5_shifted_back_100) %>% 
+  left_join(mydata5_shifted_forward_100)
+
+# plot it
+ggplot(mydata_combined,
+       aes(x = a, y = b_shifted_back)) +
+  geom_point() +
+  labs(title = "Scatterplot w/ b shifted back by 100 days")
+
+ggplot(mydata_combined,
+       aes(x = a, y = b_shifted_forward)) +
+  geom_point() +
+  labs(title = "Scatterplot w/ b shifted back by 100 days")
+
+```
+
+
+
+### Summary
 In summary, there are three functions in the package 'rBDA' to do cross-correlations:
 
 cor_fun()
@@ -198,6 +236,8 @@ cor_scatter()
   plots multiple scatter plots with different lags 
 
 There may be some small hiccups if you use inputs/data that wasn't tested for. If you do get really stuck then just use the Base R function.
+
+
 
 
 ## Autocorrelation
@@ -366,7 +406,8 @@ ggplot() +
 
 A moving time window smooths out short-term fluctuations in data to make the underlying long term trend be seen. It is a very effective way of removing noise from a data series. For more info see the Wikipedia page - https://en.wikipedia.org/wiki/Moving_average
 
-The time window works by averaging the values over a fixed period of time - it is often a good idea to use a meaningful time period, such as a week (7 days), a month (30 days) or a quarter (90 days). So, for example, if you use a 7 day period then the value for e.g. 20th November 2017 is actually an average of 7 days, rather the actual value for the 20th November.
+The time window works by averaging the values over a fixed period of time - it is often a good idea to use a meaningful time period, such as a week (7 days), a month (30 days) or a quarter (90 days). 
+So, for example, if you use a 7 day period then the value for e.g. 20th November 2017 is actually an average of 7 days (averaging the value of 20th November plus the 3 days before and the 3 days after), rather than the actual value for the 20th November.
 
 ```{r time-window-1}
 # first, replot the values in mydata7 from earlier
@@ -382,7 +423,6 @@ Calculate and plot time window lags
 # calculate time window values
 smooth_7 <- data.frame(time = mydata7$time,
                       y.7 = forecast::ma(x = mydata7$y, order = 7)) # the number of data points to smooth over (here, 7 means 7 days)
-
 
 # add to the plot
 ggplot() +
