@@ -439,7 +439,7 @@ ggplot(mydata7_w_smoothed) +
 
 
 
-## Some extra stuff
+## Time formats in R
 ### Time series data in R
 Most of the data that we have used in this class has been a dataframe consisting of a Date variable ('time') and then a variable that contains a sequence of values ('x' or 'y'). 
 
