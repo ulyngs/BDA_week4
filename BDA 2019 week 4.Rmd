@@ -213,6 +213,9 @@ mydata_combined <- mydata5 %>%
   left_join(mydata5_shifted_back_100) %>% 
   left_join(mydata5_shifted_forward_100)
 
+# have a look
+head(mydata_combined)
+
 # plot it
 ggplot(mydata_combined,
        aes(x = a, y = b_shifted_back)) +
@@ -222,7 +225,7 @@ ggplot(mydata_combined,
 ggplot(mydata_combined,
        aes(x = a, y = b_shifted_forward)) +
   geom_point() +
-  labs(title = "Scatterplot w/ b shifted back by 100 days")
+  labs(title = "Scatterplot w/ b shifted forward by 100 days")
 
 ```
 
