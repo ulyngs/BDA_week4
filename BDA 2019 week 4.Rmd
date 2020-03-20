@@ -411,26 +411,22 @@ So, for example, if you use a 7 day period then the value for e.g. 20th November
 
 ```{r time-window-1}
 # first, replot the values in mydata7 from earlier
-ggplot() +
-  geom_line(data = mydata7,
-       aes(time, y),
-           color = 'black') # super messy
+ggplot(mydata7) +
+  geom_line(aes(time, y)) # super messy
 ```
 
 Calculate and plot time window lags
 
 ```{r time-window-2}
-# calculate time window values
-smooth_7 <- data.frame(time = mydata7$time,
-                      y.7 = forecast::ma(x = mydata7$y, order = 7)) # the number of data points to smooth over (here, 7 means 7 days)
+# add column with time window values
+mydata7_w_smoothed <- mydata7 %>% 
+  mutate(moving_average = forecast::ma(y, order = 7)) # the 'order' argument is the number of data points to smooth over
 
 # add to the plot
-ggplot() +
-  geom_line(data = mydata7,
-       aes(time, y),
+ggplot(mydata7_w_smoothed) +
+  geom_line(aes(time, y),
            color = 'grey') + # the original values in grey so they are less visible
-  geom_line(data = smooth_7,
-            aes(time, y.7),
+  geom_line(aes(time, moving_average),
             color = 'black') # the smoothed values in black
 
 ```
